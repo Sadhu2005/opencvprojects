@@ -37,5 +37,6 @@ gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 imshow("Converted to Grayscale", gray_image)
 print(image.shape)
 print(gray_image.shape)
+cv2.imwrite('output.jpg',gray_image)
 
 
