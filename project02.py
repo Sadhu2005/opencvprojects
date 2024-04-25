@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 from matplotlib import pyplot as plt
 import shutil
 import os
@@ -28,15 +29,26 @@ def imshow(title="", image=None, size=10):
     plt.show()
 
 
-imshow("God Shiva", image)
+#imshow("God Shiva", image)
 # We use cvtColor, to convert to grayscale
 # It takes 2 arguments, the first being the input image
 # The second being the color space conversion code
 gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-imshow("Converted to Grayscale", gray_image)
+#imshow("Converted to Grayscale", gray_image)
 print(image.shape)
 print(gray_image.shape)
 cv2.imwrite('output.jpg',gray_image)
 
-
+B, G, R = cv2.split(image)
+zeros = np.zeros(image.shape[:2], dtype = "uint8")
+imshow("Red", cv2.merge([zeros, zeros, R]))
+imshow('blue',cv2.merge([B, zeros,zeros]))
+imshow('green',cv2.merge([zeros,G,zeros]))
+merged = cv2.merge([B, G, R])
+imshow("Merged", merged)
+# Let's amplify the blue color
+merged = cv2.merge([B+100, G, R])
+imshow("Blue Boost", merged)
+hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+imshow('HSV', hsv_image)
