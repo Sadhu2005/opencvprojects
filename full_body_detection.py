@@ -10,13 +10,12 @@ def imshow(title = "Image", image = None, size = 10):
     plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
     plt.title(title)
     plt.show()
-
-
+cap = cv2.VideoCapture('Video/walking.mp4')
 # Create our video capturing object
-cap = cv2.VideoCapture('Video/cars.mp4')
 
-# Load our vehicle classifier
-vehicle_detector = cv2.CascadeClassifier('Haarcascades/haarcascade_car.xml')
+
+# Load our body classifier
+body_classifier = cv2.CascadeClassifier('Haarcascades/haarcascade_fullbody.xml')
 
 # Read first frame
 ret, frame = cap.read()
@@ -28,27 +27,24 @@ if ret:
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     # Pass frame to our body classifier
-    vehicles = vehicle_detector.detectMultiScale(gray, 1.4, 2)
+    bodies = body_classifier.detectMultiScale(gray, 1.2, 3)
 
     # Extract bounding boxes for any bodies identified
-    for (x, y, w, h) in vehicles:
+    for (x, y, w, h) in bodies:
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 255), 2)
 
 # Release our video capture
 cap.release()
-imshow("Vehicle Detector", frame)
-#cv2.imwrite('Vehicle Detector.jpg',frame)
-
-
-
+imshow("Pedestrian Detector", frame)
+cv2.imwrite('Pedestrian Detector.jpg',frame)
 # Get the height and width of the frame (required to be an interfer)
 w = int(cap.get(3))
 h = int(cap.get(4))
 
-# Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
-out = cv2.VideoWriter('cars_output.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, (w, h))
+# Define the codec and create VideoWriter object.The output is stored in 'walking_output.avi' file.
+out = cv2.VideoWriter('walking_output.mp4', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, (w, h))
 
-vehicle_detector = cv2.CascadeClassifier('Haarcascades/haarcascade_car.xml')
+body_detector = cv2.CascadeClassifier('Haarcascades/haarcascade_fullbody.xml')
 
 # Loop once video is successfully loaded
 while (True):
@@ -59,10 +55,10 @@ while (True):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # Pass frame to our body classifier
-        vehicles = vehicle_detector.detectMultiScale(gray, 1.2, 3)
+        bodies = body_detector.detectMultiScale(gray, 1.2, 3)
 
         # Extract bounding boxes for any bodies identified
-        for (x, y, w, h) in vehicles:
+        for (x, y, w, h) in bodies:
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 255), 2)
 
         # Write the frame into the file 'output.avi'
